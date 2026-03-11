@@ -1,0 +1,4 @@
+{
+  "buildCommand": "npm install",
+  "serverlessFunctionRegion": "us-east-1"
+}

@@ -1,0 +1,19 @@
+{
+  "name": "pomodoro-app",
+  "version": "1.0.0",
+  "description": "Modern Pomodoro timer web application with multiple themes",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["pomodoro","timer","web","app"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}

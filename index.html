@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>:3 pomodoro</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { font-family: 'Poppins', sans-serif; }
+        
+        body.profile-aarhon { --accent: #e63946; --accent-light: #f77f88; --accent-dark: #a4161a; --bg-primary: #050506; --bg-secondary: #0f0f0f; --bg-tertiary: #1a1a1a; }
+        body.profile-paula { --accent: #ec4899; --accent-light: #f472b6; --accent-dark: #be185d; --bg-primary: #fff5f7; --bg-secondary: #ffecf1; --bg-tertiary: #fce7f3; }
+        body.profile-dark { --accent: #3b82f6; --accent-light: #60a5fa; --accent-dark: #1e40af; --bg-primary: #0a0e27; --bg-secondary: #111837; --bg-tertiary: #1e293b; }
+        body.profile-light { --accent: #f59e0b; --accent-light: #fbbf24; --accent-dark: #d97706; --bg-primary: #fffbf0; --bg-secondary: #fff8f1; --bg-tertiary: #fef3e2; }
+        
+        body { background-color: var(--bg-primary); color: #e0e0e0; transition: all 0.4s ease; margin: 0; }
+        body.profile-paula { color: #7f1d1d; }
+        body.profile-dark { color: #e0e7ff; }
+        body.profile-light { color: #78350f; }
+        
+        header { background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%); border-bottom: 2px solid var(--accent); padding: 12px 20px; display: flex; justify-content: space-between; align-items: center; height: 50px; }
+        header h1 { font-size: 1.5rem; font-weight: 700; margin: 0; }
+        header .header-left { display: flex; gap: 12px; align-items: center; }
+        header select { background: var(--bg-tertiary); color: #e0e0e0; border: 2px solid var(--accent); border-radius: 8px; padding: 6px 10px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        header select:hover { transform: scale(1.05); box-shadow: 0 5px 15px rgba(168, 85, 247, 0.3); }
+        header select:focus { outline: none; box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2); }
+        body.profile-paula header select { color: #3f434f; }
+        body.profile-dark header select { color: #e0e7ff; }
+        body.profile-light header select { color: #78350f; }
+        #datetime { font-size: 0.85rem; opacity: 0.8; }
+        
+        main { display: grid; grid-template-columns: 1fr 1.2fr 1fr; gap: 16px; padding: 16px; height: calc(100vh - 50px); }
+        
+        section { background: var(--bg-secondary); border-radius: 16px; padding: 16px; display: flex; flex-direction: column; overflow: hidden; animation: slideInUp 0.5s ease-out; }
+        
+        @keyframes slideInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Left sidebar - Tasks */
+        .sidebar-left { gap: 12px; }
+        .sidebar-left h2 { font-size: 1.1rem; font-weight: 700; margin: 0 0 8px 0; }
+        
+        #todo-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 6px; flex: 1; overflow-y: auto; }
+        #todo-list li {
+            background: var(--bg-tertiary);
+            padding: 10px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            border-left: 4px solid var(--accent);
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: slideInLeft 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-15px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes slideOutLeft { from { opacity: 1; transform: translateX(0); } to { opacity: 0; transform: translateX(-20px); } }
+        @keyframes slideInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes bounceIn { 0% { opacity: 0; transform: scale(0.8); } 50% { opacity: 1; } 100% { transform: scale(1); } }
+        @keyframes buttonClick { 0% { transform: scale(1); } 50% { transform: scale(0.95); } 100% { transform: scale(1); } }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.15); } }
+        @keyframes shimmer { 0% { background-position: -1000px 0; } 100% { background-position: 1000px 0; } }
+        @keyframes glow { 0%, 100% { box-shadow: 0 0 5px rgba(168, 85, 247, 0.5); } 50% { box-shadow: 0 0 20px rgba(168, 85, 247, 0.8); } }
+        
+        #todo-list li { position: relative; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        #todo-list li:hover { transform: translateX(4px); background: var(--bg-primary); }
+        #todo-list button { background: var(--accent); color: white; border: none; width: 20px; height: 20px; border-radius: 5px; cursor: pointer; font-size: 0.75rem; transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55); position: relative; }
+        #todo-list button:hover { transform: scale(1.3) rotate(90deg); filter: brightness(1.2); }
+        #todo-list button:active { animation: buttonClick 0.3s ease-out; }
+        
+        .todo-input-group { display: flex; gap: 6px; }
+        #todo-input { background: var(--bg-tertiary); border: 2px solid transparent; color: #e0e0e0; padding: 8px; border-radius: 8px; flex: 1; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-size: 0.85rem; }
+        body.profile-paula #todo-input { color: #3f434f; }
+        body.profile-dark #todo-input { color: #e0e7ff; }
+        body.profile-light #todo-input { color: #78350f; }
+        #todo-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 15px rgba(168, 85, 247, 0.3); transform: scale(1.02); }
+        #add-todo { background: var(--accent); color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-size: 0.85rem; position: relative; overflow: hidden; }
+        #add-todo:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 8px 20px rgba(168, 85, 247, 0.4); }
+        #add-todo:active { animation: buttonClick 0.3s ease-out; }
+        
+        /* Center - Timer */
+        .timer-section { align-items: center; justify-content: center; }
+        
+        #progress-circle {
+            filter: drop-shadow(0 15px 30px rgba(168, 85, 247, 0.3));
+            transition: filter 0.3s ease;
+            width: 160px;
+            height: 160px;
+            animation: rotateIn 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        body.profile-paula #progress-circle { filter: drop-shadow(0 15px 30px rgba(236, 72, 153, 0.4)); }
+        body.profile-dark #progress-circle { filter: drop-shadow(0 15px 30px rgba(59, 130, 246, 0.3)); }
+        body.profile-light #progress-circle { filter: drop-shadow(0 15px 30px rgba(245, 158, 11, 0.3)); }
+        @keyframes rotateIn { 0% { opacity: 0; transform: rotate(-180deg) scale(0.3); } 50% { opacity: 1; } 100% { transform: rotate(0) scale(1); } }
+        
+        body.profile-paula #progress-circle { filter: drop-shadow(0 15px 30px rgba(236, 72, 153, 0.3)); }
+        
+        #timer { font-size: 3rem; font-weight: 700; color: var(--accent); letter-spacing: -2px; margin: 12px 0; }
+        
+        #start-button {
+            background: linear-gradient(135deg, var(--accent-light), var(--accent-dark));
+            border: none;
+            color: white;
+            font-weight: 600;
+            padding: 10px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 25px rgba(168, 85, 247, 0.2);
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+        #start-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.2);
+            transition: left 0.5s ease;
+        }
+        #start-button:hover::before { left: 100%; }
+        body.profile-paula #start-button { box-shadow: 0 10px 25px rgba(236, 72, 153, 0.2); }
+        body.profile-dark #start-button { box-shadow: 0 10px 25px rgba(59, 130, 246, 0.2); }
+        body.profile-light #start-button { box-shadow: 0 10px 25px rgba(245, 158, 11, 0.2); }
+        #start-button:hover { transform: translateY(-4px) scale(1.05); box-shadow: 0 15px 40px rgba(168, 85, 247, 0.5); }
+        #start-button:active { animation: buttonClick 0.3s ease-out; }
+        
+        #notes {
+            background: var(--bg-tertiary);
+            border: 2px solid transparent;
+            color: #e0e0e0;
+            border-radius: 10px;
+            padding: 10px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-size: 0.85rem;
+            flex: 1;
+            max-height: 80px;
+            resize: none;
+        }
+        body.profile-paula #notes { color: #3f434f; }
+        body.profile-dark #notes { color: #e0e7ff; }
+        body.profile-light #notes { color: #78350f; }
+        #notes:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 15px rgba(168, 85, 247, 0.3); transform: scale(1.02); }
+        
+        /* Right sidebar - Stats */
+        .sidebar-right { gap: 12px; align-items: center; justify-content: flex-start; }
+        .stat-box { text-align: center; padding: 16px; background: var(--bg-tertiary); border-radius: 12px; border-top: 4px solid var(--accent); width: 100%; animation: scaleUp 0.5s ease-out; }
+        @keyframes scaleUp { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+        
+        .stat-number { font-size: 2rem; font-weight: 700; color: var(--accent); }
+        .stat-label { font-size: 0.8rem; opacity: 0.8; margin-top: 6px; }
+        
+        #extra-content { font-size: 4rem; animation: float 3s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
+        
+        .history-section { flex: 1; display: flex; flex-direction: column; width: 100%; }
+        .history-toggle { background: var(--accent); color: white; border: none; padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-weight: 600; margin-top: auto; width: 100%; position: relative; overflow: hidden; z-index: 1; }
+        .history-toggle::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+            z-index: -1;
+        }
+        .history-toggle:active::after { width: 300px; height: 300px; }
+        .history-toggle:hover { transform: translateY(-3px) scale(1.05); box-shadow: 0 8px 20px rgba(168, 85, 247, 0.4); }
+        .history-toggle:active { animation: buttonClick 0.3s ease-out; }
+        
+        #task-history { 
+            display: none;
+            list-style: none;
+            padding: 0;
+            margin-top: 8px;
+            max-height: 100px;
+            overflow-y: auto;
+            width: 100%;
+            gap: 6px;
+            flex-direction: column;
+            font-size: 0.8rem;
+        }
+        #task-history.show { display: flex; animation: slideDown 0.3s ease-out; }
+        @keyframes slideDown { from { opacity: 0; max-height: 0; } to { opacity: 1; max-height: 100px; } }
+        
+        #task-history li { background: var(--bg-tertiary); padding: 8px; border-radius: 8px; border-left: 3px solid var(--accent-light); }
+    </style>
+</head>
+<body class="profile-aarhon">
+    <header>
+        <div class="header-left">
+            <h1>Pomodoro Pro</h1>
+            <select id="profile-select">
+                <option value="aarhon">Aarhon</option>
+                <option value="paula">Paula 💗</option>
+                <option value="dark">Dark Mode</option>
+                <option value="light">Light Mode</option>
+            </select>
+        </div>
+        <div id="datetime"></div>
+    </header>
+    
+    <main>
+        <!-- Left: Tasks -->
+        <section class="sidebar-left">
+            <h2>📝 Tasks</h2>
+            <ul id="todo-list"></ul>
+            <div class="todo-input-group">
+                <input id="todo-input" type="text" placeholder="Add task..." />
+                <button id="add-todo">+</button>
+            </div>
+        </section>
+        
+        <!-- Center: Timer -->
+        <section class="timer-section">
+            <svg id="progress-circle" viewBox="0 0 160 160">
+                <defs>
+                    <linearGradient id="grad-aarhon" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#e63946" />
+                        <stop offset="100%" stop-color="#a4161a" />
+                    </linearGradient>
+                    <linearGradient id="grad-paula" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#ec4899" />
+                        <stop offset="100%" stop-color="#be185d" />
+                    </linearGradient>
+                    <linearGradient id="grad-dark" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#3b82f6" />
+                        <stop offset="100%" stop-color="#1e40af" />
+                    </linearGradient>
+                    <linearGradient id="grad-light" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#f59e0b" />
+                        <stop offset="100%" stop-color="#d97706" />
+                    </linearGradient>
+                </defs>
+                <circle cx="80" cy="80" r="70" fill="none" stroke="rgba(200,200,200,0.1)" stroke-width="10" />
+                <circle id="progress-bar" cx="80" cy="80" r="70" fill="none" stroke="url(#grad-aarhon)" stroke-width="10" stroke-dasharray="439.8" stroke-dashoffset="0" stroke-linecap="round" />
+                <circle cx="80" cy="80" r="2" fill="url(#grad-aarhon)" />
+            </svg>
+            <div id="timer">25:00</div>
+            <button id="start-button">Start Timer</button>
+            <textarea id="notes" placeholder="📝 Notes..."></textarea>
+        </section>
+        
+        <!-- Right: Stats & History -->
+        <section class="sidebar-right">
+            <div class="stat-box">
+                <div class="stat-label">Sessions</div>
+                <div id="session-count" class="stat-number">0</div>
+            </div>
+            <div id="extra-content"></div>
+            <div class="history-section">
+                <ul id="task-history"></ul>
+                <button class="history-toggle" id="toggle-history">Show History</button>
+            </div>
+        </section>
+    </main>
+
+    <script src="renderer.js"></script>
+</body>
+</html>
